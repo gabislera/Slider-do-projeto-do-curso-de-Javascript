@@ -2,22 +2,33 @@ export default class Slide {
     constructor(slide, wrapper) {
         this.slide = document.querySelector(slide)
         this.wrapper = document.querySelector(wrapper)
+        this.dist = { finalPosition: 0, startX: 0, movement: 0 }
     }
 
     onStart(event) {
         event.preventDefault()
-        console.log('mousedown')
+        this.dist.startX = event.clientX
         this.wrapper.addEventListener('mousemove', this.onMove)
     }
-
+    
     onMove(event) {
-        console.log('moveu')
+        const finalPosition = this.uptadePosition(event.clientX)
+        this.moveSlide(finalPosition)
+    }
+    
+    uptadePosition(clientX) {
+        this.dist.movement = (this.dist.startX - clientX) * 1.6
+        return this.dist.finalPosition - this.dist.movement
+    }
+
+    moveSlide(distX) {
+        this.slide.style.transform = `translate3d(${distX}px, 0, 0)`
+        this.dist.movePosition = distX
     }
 
     onEnd() {
         this.wrapper.removeEventListener('mousemove', this.onMove)
-
-        console.log('acabou')
+        this.dist.finalPosition = this.dist.movePosition
     }
 
     addSlideEvents() {
